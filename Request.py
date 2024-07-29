@@ -1,6 +1,8 @@
 import requests
 import cv2
-from fake_useragent import UserAgent
+from fake_useragent import UserAgent 
+
+# тестил request
 
 page_link = 'https://www.avito.ru/pskov/vakansii?cd=1&q=псков+работа'
 image_back = cv2.imread("Tota/back.png")
