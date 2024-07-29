@@ -1,6 +1,6 @@
 import SeleniumScripts
 
-
+# тут можно захардкодить интерфейс, но это без меня
 class Avito(object):
 
     def __init__(self, uri=None, vacancy=None):
