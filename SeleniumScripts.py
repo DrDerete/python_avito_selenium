@@ -14,7 +14,7 @@ import cv2
 
 class Driver(webdriver.Chrome):
 
-    def __init__(self, service=webdriver.ChromeService(), options=webdriver.ChromeOptions()):
+    def __init__(self, service=webdriver.ChromeService(), options=webdriver.ChromeOptions()):  # настройки для selenium.webdriver
         self.__last = False
         self.__next_page = None
         options.add_argument("--window-size=1920,1080")
@@ -24,7 +24,7 @@ class Driver(webdriver.Chrome):
         super().__init__(options, service)
         self.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 
-    def __solve_captcha(self):
+    def __solve_captcha(self):  # тестил прохождение капчи
         while True:
             WebDriverWait(self, timeout=5).until(lambda x: x.find_element("xpath", "//button")).click()
             distance = self.__parse_image()
@@ -38,7 +38,7 @@ class Driver(webdriver.Chrome):
             if "IP" not in self.title:
                 return
 
-    def __parse_image(self):
+    def __parse_image(self):  # скачивание изображения (из кеша драйвера не даёт)
         web_elements = WebDriverWait(self, timeout=5).until(lambda x: x.find_elements("xpath", "//div[contains(@class, \"window\")]/div"))
         back = web_elements[1].get_attribute("style").split("\"")[1]
         req.urlretrieve(back, "Tota/back.png")
@@ -46,7 +46,7 @@ class Driver(webdriver.Chrome):
         req.urlretrieve(slide, "Tota/slide.png")
         return self.__find_distance()
 
-    def __find_distance(self):
+    def __find_distance(self):  # найти дистанцию сдвига слайдера на капче
         slide_info = self.__what_about()
         middle_slide = slide_info["top"] + int(slide_info["width"] / 2)
         origin = self.__count_slide(int(slide_info["width"] / 2))
@@ -55,24 +55,24 @@ class Driver(webdriver.Chrome):
         pixels = []
         loop = iter(range(slide_info["width"], len(gray_image[middle_slide])-int(slide_info["width"]/2)))
         for i in loop:
-            if gray_image[middle_slide][i] / gray_image[middle_slide][i + 1] > 1.35:
+            if gray_image[middle_slide][i] / gray_image[middle_slide][i + 1] > 1.35:  # окрашимаем изображение в 2-color для упращения и ищем паттерн затемения, добовляем все варианты
                 pixels.append(i)
                 next(islice(loop, 9, 10), None)
-        match len(pixels):
+        match len(pixels):  # смотрим сколько, резко затемненных пикселей было найдено
             case 0:
                 print("Багуля")
                 return 0
             case 1:
-                return pixels[0] - int(origin["zeros"]/2)
-            case _:
+                return pixels[0] - int(origin["zeros"]/2)  # если один, то сразу наш клиент
+            case _: # в противном случае смотрим сумму последующих пикселей, как у слайдера
                 pix_area = []
                 for i in pixels:
                     pix_area.append(gray_image[middle_slide][i:i + origin["colors"]])
                 indicator = 0
                 index = 0
-                for i in range(len(pix_area)):
+                for i in range(len(pix_area)): 
                     factor = sum(pix_area[i]) / sum(origin["pattern"])
-                    if abs(factor - 0.5) < abs(indicator - 0.5):
+                    if abs(factor - 0.5) < abs(indicator - 0.5): # вот такое получиось, хотя думаю можно поэлегантней придумать условие
                         indicator = factor
                         index = i
                 return pixels[index] - int(origin["zeros"] / 2)
@@ -144,7 +144,7 @@ class Driver(webdriver.Chrome):
         except exceptions.NoSuchElementException:
             return "END"
 
-    def parsing(self, uri, expended, vacancy):
+    def parsing(self, uri, expended, vacancy): 
         if expended:
             pass
             # тут составить url из ввода
@@ -167,7 +167,7 @@ class Driver(webdriver.Chrome):
         return self.__exist_next_page()
 
 
-class Excell(object):
+class Excell(object):  # сохранение в ex
 
     path = "Tota/Avito.xlsx"
 
