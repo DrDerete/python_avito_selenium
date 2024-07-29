@@ -1,0 +1,8 @@
+NEXT_PAGE = ("xpath", "//a[@aria-label=\"Следующая страница\"]")
+WORKS = ("css selector", ".iva-item-body-KLUuy a[itemprop=\"url\"]")
+WORK_TITLE = ("xpath", "//h1")
+PRICE = ("xpath", "(//div[@itemprop=\"offers\"])[2]")
+CONDITIONS = ("xpath", "(//ul)[2]")
+LOCATION = ("xpath", "//div[@itemprop=\"address\"]")
+DESCRIPTION = ("xpath", "//div[@itemprop=\"description\"]")
+INFO = ("xpath", "(//div[contains(@class, \"PETb\")])[1]")
